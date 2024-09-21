@@ -4,7 +4,7 @@ const useTravels = () => {
   const [travels, setTravels] = useState({
     id: "",
     nome: "",
-    imgs: [""],
+    imgs: [],
     classificacao: "",
     descricao: "",
     diarias: "",

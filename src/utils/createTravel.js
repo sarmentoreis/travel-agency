@@ -1,4 +1,4 @@
-import setLocalStorage from "./setLocalStorage";
+import { setLocalStorage } from "./localStorage";
 
 const createTravel = (listTravels, setListTravels, travels) => {
   setListTravels((listTravels) => [...listTravels, travels]);

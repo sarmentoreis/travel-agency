@@ -8,6 +8,8 @@ import {
   Input,
   InputNumber,
   Rate,
+  Select,
+  notification,
 } from "antd";
 import TravelCard from "../TravelCard/TravelCard";
 import { PlusCircleFilled } from "@ant-design/icons";
@@ -16,17 +18,32 @@ import useTravels from "../../hooks/useTravels";
 import useListTravels from "../../hooks/useListTravels";
 import createTravel from "../../utils/createTravel";
 import { nanoid } from "nanoid";
+import { useEffect } from "react";
+import loadTravels from "../../utils/loadTravels";
 
 const { TextArea } = Input;
 
 export default function Home() {
+  const [api, contextHolder] = notification.useNotification();
   const { travels, setTravels } = useTravels();
   const { listTravels, setListTravels } = useListTravels();
   const { showModal, handleCancel, handleOk, isModalOpen } = useModal();
-  console.log(travels);
+  const [form] = Form.useForm();
+
+  const openNotificationWithIcon = () => {
+    api["success"]({
+      message: "Cadastro de viagem",
+      description: "viagem cadastrada com sucesso!",
+    });
+  };
+
+  useEffect(() => {
+    loadTravels(setListTravels);
+  }, []);
 
   return (
     <ConfigProvider>
+      {contextHolder}
       <Header
         style={{
           color: "snow",
@@ -52,20 +69,51 @@ export default function Home() {
         title="Cadastrar viagens"
         open={isModalOpen}
         onOk={() => {
-          handleOk();
-          createTravel(listTravels, setListTravels, travels);
+          form.submit();
         }}
-        onCancel={handleCancel}
+        onCancel={() => {
+          handleCancel();
+          setTravels({});
+        }}
       >
-        <Form layout="vertical">
-          <Form.Item label="País">
+        <Form
+          form={form}
+          onFinish={(value) => {
+            if (value) {
+              handleOk();
+              createTravel(listTravels, setListTravels, travels);
+              openNotificationWithIcon();
+              form.resetFields();
+            }
+          }}
+          layout="vertical"
+        >
+          <Form.Item
+            name="pais"
+            rules={[
+              {
+                required: true,
+                message: "Informe um país de destino",
+              },
+            ]}
+            label="País"
+          >
             <Input
               allowClear={true}
               placeholder="País"
               onChange={(e) => setTravels({ ...travels, nome: e.target.value })}
             />
           </Form.Item>
-          <Form.Item label="Estado">
+          <Form.Item
+            name="estado"
+            rules={[
+              {
+                required: true,
+                message: "Informe o estado do país",
+              },
+            ]}
+            label="Estado"
+          >
             <Input
               allowClear={true}
               placeholder="Estado"
@@ -74,7 +122,16 @@ export default function Home() {
               }
             />
           </Form.Item>
-          <Form.Item label="Descrição">
+          <Form.Item
+            name="descricao"
+            rules={[
+              {
+                required: true,
+                message: "Informe uma descrição do país",
+              },
+            ]}
+            label="Descrição"
+          >
             <TextArea
               autoSize={{ maxRows: 4 }}
               placeholder="Digite uma descrição do país"
@@ -84,7 +141,16 @@ export default function Home() {
               }
             />
           </Form.Item>
-          <Form.Item label="Diárias">
+          <Form.Item
+            name="diarias"
+            rules={[
+              {
+                required: true,
+                message: "Informe a quantidade de diárias da viagem",
+              },
+            ]}
+            label="Diárias"
+          >
             <InputNumber
               min={0}
               max={365}
@@ -94,21 +160,67 @@ export default function Home() {
               }
             />
           </Form.Item>
-          <Form.Item label="Classificação">
+          <Form.Item
+            name="classificacao"
+            rules={[
+              {
+                required: true,
+                message: "Informe uma classificação para o país",
+              },
+            ]}
+            label="Classificação"
+          >
             <Rate
               onChange={(e) =>
                 setTravels({ ...travels, classificacao: e.toString() })
               }
             />
           </Form.Item>
-          <Form.Item label="Preço">
+          <Form.Item
+            name="imagens"
+            rules={[
+              {
+                required: true,
+                message: "Informe pelo menos 1 URL de imagem",
+              },
+            ]}
+            label="Imagens"
+          >
+            <Select
+              mode="tags"
+              style={{ width: "100%" }}
+              placeholder="Insira até quatro(4) URL's de imagens"
+              allowClear
+              maxCount={4}
+              onChange={(e) => {
+                if (e.length <= 4) {
+                  setTravels((prevTravels) => ({
+                    ...prevTravels,
+                    imgs: e,
+                  }));
+                }
+              }}
+              value={travels.imgs}
+            />
+          </Form.Item>
+          <Form.Item
+            name="preco"
+            rules={[
+              {
+                required: true,
+                message: "Informe o preço da viagem",
+              },
+            ]}
+            label="Preço"
+          >
             <InputNumber
               min={0}
               step={100.0}
               formatter={(value) =>
                 `R$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
               }
-              onChange={(e) => setTravels({ ...travels, preco: e.toString() })}
+              parser={(value) => value.replace(/\R\$\s?|(,*)/g, "")}
+              onChange={(value) => setTravels({ ...travels, preco: value })}
             />
           </Form.Item>
         </Form>
