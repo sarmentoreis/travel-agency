@@ -11,7 +11,7 @@ const router = createBrowserRouter([
     element: <Home />,
   },
   {
-    path: "/details/:id",
+    path: "/details/:id/:darkmode",
     element: <Details />,
   },
   {

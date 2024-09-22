@@ -1,4 +1,4 @@
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styles from "./style.module.css";
 import { Button, ConfigProvider } from "antd";
 

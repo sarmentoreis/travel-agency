@@ -2,8 +2,10 @@
   display: flex;
   flex-direction: column;
   width: 300px;
-  height: 300px;
-  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+  height: 320px;
+  border-top-left-radius: 4%;
+  border-top-right-radius: 4%;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 2.95px 2.6px;
 }
 
 .card img {
@@ -19,4 +21,5 @@
   flex-direction: column;
   height: inherit;
   justify-content: space-around;
+  color: inherit;
 }
