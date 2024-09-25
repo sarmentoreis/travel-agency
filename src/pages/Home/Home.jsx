@@ -12,9 +12,8 @@ import {
   Switch,
   notification,
 } from "antd";
-import TravelCard from "../TravelCard/TravelCard";
+import TravelCard from "../../components/TravelCard/TravelCard";
 import { PlusCircleFilled, DeleteFilled } from "@ant-design/icons";
-import useModal from "../../hooks/useModal";
 import useTravels from "../../hooks/useTravels";
 import useListTravels from "../../hooks/useListTravels";
 import createTravel from "../../utils/createTravel";
@@ -23,12 +22,13 @@ import { useEffect } from "react";
 import deleteTravel from "../../utils/deleteTravel";
 import useDarkMode from "../../hooks/useDarkMode";
 import { loadTheme, loadTravels } from "../../utils/loadLocalStorage";
+import useModal from "../../hooks/useModal";
 
 export default function Home() {
   const [api, contextHolder] = notification.useNotification();
   const { travels, setTravels } = useTravels();
   const { isDarkMode, setIsDarkMode, handleDarkMode } = useDarkMode();
-  const { listTravels, setListTravels } = useListTravels();
+  const { listTravels, setListTravels, handleSortChange } = useListTravels();
   const { showModal, handleCancel, handleOk, isModalOpen } = useModal();
   const [form] = Form.useForm();
   const { TextArea } = Input;
@@ -76,6 +76,21 @@ export default function Home() {
         }}
       >
         <h2 className={styles.title}>Travel Agency</h2>
+        <label style={{ marginRight: 10 }}>Ordenar por:</label>
+        <Select
+          onChange={handleSortChange}
+          style={{ marginRight: "5vw", width: 200 }}
+          placeholder="Selecione um filtro"
+        >
+          <Select.Option value="preco-min">Preço mínimo</Select.Option>
+          <Select.Option value="preco-max">Preço máximo</Select.Option>
+          <Select.Option value="classificacao-min">
+            Classificação mínima
+          </Select.Option>
+          <Select.Option value="classificacao-max">
+            Classificação máxima
+          </Select.Option>
+        </Select>
         <Switch
           checked={isDarkMode}
           checkedChildren="Dark"

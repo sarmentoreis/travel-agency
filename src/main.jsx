@@ -1,9 +1,9 @@
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import NotFound from "./components/NotFound/NotFound";
-import Home from "./components/Home/Home";
-import Details from "./components/Details/Details";
+import Home from "./pages/Home/Home";
+import Details from "./pages/Details/Details";
+import NotFound from "./pages/NotFound/NotFound";
 
 const router = createBrowserRouter([
   {
